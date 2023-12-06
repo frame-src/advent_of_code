@@ -37,12 +37,12 @@ size_t calculate_point( int* winning){
 int *create_winning(char*line, int *numbers){
     int pt = 0;
     for( int i = 0; i < NUM_WINNING; i++){
-        if(isdigit(line[pt]) != 0) {
-            numbers[i] = atoi(&line[pt]);
-            while(isdigit(line[pt]) == 0)
-                pt++;
-            
-        } else pt++;
+        while(line[pt] && isdigit(line[pt]) == 0)
+            pt++;
+        printf("%s  & pt: %d\n", &line[pt], pt);
+        numbers[i] = atoi(&line[pt]);
+        while(line[pt] && isdigit(line[pt]) != 0)
+            pt++;
     }
     return(numbers);
 }
@@ -50,11 +50,12 @@ int *create_winning(char*line, int *numbers){
 int *create_owned(char*line, int *numbers){
     int pt = 0;
     for( int i = 0; i < NUM_OWNED; i++){
-        if(isdigit(line[pt]) != 0) {
-            numbers[i] = atoi(&line[pt]);
-            while(isdigit(line[pt]) != 0)
-                pt++;
-        } else pt++;
+        while(line[pt] && isdigit(line[pt]) == 0)
+            pt++;
+        printf("%s  & pt: %d\n", &line[pt], pt);
+        numbers[i] = atoi(&line[pt]);
+        while(line[pt] && isdigit(line[pt]) != 0)
+            pt++;
     }
     return (numbers);
 }
@@ -98,7 +99,7 @@ int main (void)
     size_t size = 0;
     char *line;
     
-    f = fopen("../../input/03/test.txt", "r");
+    f = fopen("../../input/03/input.txt", "r");
     if (f == NULL)
         exit(1);
     size = file_size(f);
@@ -109,6 +110,7 @@ int main (void)
         printf("Error: unexpected end of file\n");
     else if (ferror(f))
         perror("Error reading file\n");
+
     calculate_value(buffer);
     return(0);
 }
