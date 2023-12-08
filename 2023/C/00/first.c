@@ -47,7 +47,7 @@ int main (void)
     size_t size = 0;
     char *line;
     
-    f = fopen("input.txt", "r");
+    f = fopen("./Users/francesco/Documents/advent_of_code/2023/input/00/input.txt", "r");
     if (f == NULL)
         exit(1);
     size = file_size(f);

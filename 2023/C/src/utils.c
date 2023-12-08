@@ -14,7 +14,6 @@ char *get_line(char *buffer)
 {
     size_t i = 0;
     char *nl = NULL;
-
     while(buffer[i]){
         if(buffer[i] == '\n'){
             nl = create_null_term_buffer(i);

@@ -68,6 +68,11 @@ size_t process_line(char* line)
         res = res + (end - '0');
     else
         res = res + start - '0';
+    if(start)
+        printf("%c",start);
+    if(end)
+        printf("%c", end);
+    printf("\n");
     return (res);
 }
 
@@ -93,7 +98,7 @@ int main (void)
     size_t size = 0;
     char *line;
     
-    f = fopen("input.txt", "r");
+    f = fopen("./test.txt", "r");
     if (f == NULL)
         exit(1);
     size = file_size(f);
