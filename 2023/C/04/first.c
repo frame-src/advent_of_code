@@ -24,7 +24,7 @@ int *add_value_to_nmbrs(int *n, int value){
         size = i + 1;
     }
     int *new = malloc( sizeof(int) * size);
-    if(new == NULL)
+    if(!new)
         exit (1);
     i = 0;
     while(n && n[i] != -1){
@@ -42,11 +42,14 @@ void update_conversion_table(int *nmbrs){
     while(conversion_table && conversion_table[i])
         i++;
     size = size + i;
-    struct info **new = malloc (sizeof(struct info) * (size));
+    struct info **new = malloc (sizeof(struct info *) * (size));
     if(!new)
         exit(1);
     if(conversion_table){
         for(i = 0; i < size - 1; i++){
+            new[i] = malloc(sizeof(struct info ));
+            if (!new[i])
+                exit(1);
             new[i]->destination_start = conversion_table[i]->destination_start;
             new[i]->source_start = conversion_table[i]->source_start;
             new[i]->range = conversion_table[i]->range;
@@ -54,6 +57,9 @@ void update_conversion_table(int *nmbrs){
         }
         free(conversion_table);
     }
+    new[i] = malloc(sizeof(struct info ) * 1);
+    if (!new[i])
+        exit(1);
     new[i]->destination_start = nmbrs[0];
     new[i]->source_start = nmbrs[1];
     new[i]->range = nmbrs[3];
@@ -68,13 +74,12 @@ void manage_conversion_table(char* line){
     int *nmbrs = NULL;
 
     while(line[i]){
-        while(!isnumber(line[i]))
+        while(line[i] && !isnumber(line[i]))
             i++;
         value = atoi(&line[i]);
         nmbrs = add_value_to_nmbrs(nmbrs, value);
         while(isnumber(line[i]))
             i++;
-        printf("TEST2\n");
     }
     if(!seeds){
         seeds = nmbrs;
@@ -119,16 +124,17 @@ void perform_conversion(){
 
 void process_line(char *line){
     if(isalpha(line[0])){
+        printf("got a new instruction;\n");
         CONVERTING = true;
-        printf("TEST0\n");
         return;
     }
-    else if(line[0] == '\n'){
+    else if(line[0] == '\n' || line[0] == '\0'){
+        printf("perform conversion;\n");
         perform_conversion();
         CONVERTING = false;
-        printf("TEST1\n");
         return;
     } else {
+        printf("create conversion_table: %s\n",line);
         manage_conversion_table(line);
     }
 }
