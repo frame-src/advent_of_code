@@ -8,11 +8,11 @@ struct info{
     size_t range;
 };
 
-int *seeds = NULL;
+size_t *seeds = NULL;
 struct info **conversion_table = NULL;
 bool CONVERTING = false;
 
-int *add_value_to_nmbrs(int *n, int value){
+size_t *add_value_to_nmbrs(size_t *n, size_t value){
     int size = 0;
     int i = 0;
 
@@ -23,20 +23,20 @@ int *add_value_to_nmbrs(int *n, int value){
             i++;
         size = i + 1;
     }
-    int *new = malloc( sizeof(int) * size);
+    size_t *new = malloc( sizeof(size_t) * size);
     if(!new)
         exit (1);
+    new[i] = -1;
     i = 0;
     while(n && n[i] != -1){
         new[i] = n[i];
         i++;
     } 
     new[i] = value;
-    new[i + 1] = -1;
     return new;
 }
 
-void update_conversion_table(int *nmbrs){
+void update_conversion_table(size_t *nmbrs){
     int i = 0;
     int size = 2;
     while(conversion_table && conversion_table[i])
@@ -62,20 +62,20 @@ void update_conversion_table(int *nmbrs){
         exit(1);
     new[i]->destination_start = nmbrs[0];
     new[i]->source_start = nmbrs[1];
-    new[i]->range = nmbrs[3];
+    new[i]->range = nmbrs[2];
     new[i + 1] = NULL;
     conversion_table = new;
 }
 
-void manage_conversion_table(char* line){
+void fill_conversion_table(char* line){
     size_t i = 0;
-    int value = 0;
-    int *nmbrs = NULL;
+    size_t value = 0;
+    size_t *nmbrs = NULL;
 
     while(line[i]){
         while(line[i] && !isnumber(line[i]))
             i++;
-        value = atoi(&line[i]);
+        value = atol(&line[i]);
         nmbrs = add_value_to_nmbrs(nmbrs, value);
         while(isnumber(line[i]))
             i++;
@@ -83,18 +83,17 @@ void manage_conversion_table(char* line){
     if(!seeds){
         seeds = nmbrs;
         return;
-    } 
+    }
     update_conversion_table(nmbrs);
     free(nmbrs);
 }
 
-size_t convert(int seed){
+size_t convert(size_t seed){
     size_t i = 0;
     size_t upper_bound = 0;
     size_t new_value = 0;
     bool check = false;
     while(conversion_table[i]){
-        printf(" %li, %li, %li \n",conversion_table[i]->destination_start, conversion_table[i]->source_start,conversion_table[i]->range);
         upper_bound = conversion_table[i]->source_start + conversion_table[i]->range;
         if(conversion_table[i]->source_start <= seed && seed < upper_bound){
             check = true;
@@ -103,7 +102,7 @@ size_t convert(int seed){
         i++;
     }
     if(check == true){
-        int diff = seed - conversion_table[i]->source_start;
+        size_t diff = seed - conversion_table[i]->source_start;
         new_value = conversion_table[i]->destination_start + diff;
     }
     else 
@@ -113,29 +112,41 @@ size_t convert(int seed){
 
 void perform_conversion(){
     size_t i = 0 ;
-    printf("CONVERT : ");
     if(conversion_table){
         while(seeds[i] > 0){
-            printf("before %i | ", seeds[i]);
             seeds[i] = convert(seeds[i]);
-            printf(" after %i ", seeds[i]);
             i++;
         }
     }
-    printf(" end \n");
+}
+
+void clean_conversion_table(){
+    int i = 0;
+    
+    if( conversion_table){
+        while( conversion_table[i]){
+            free( conversion_table[i]);
+            i++;
+        }
+        free(conversion_table);
+        conversion_table = NULL;
+    }
+}
+
+void print(){
+    int i = 0;
+    while(conversion_table && conversion_table[i]){
+        i++;
+    }
+}
+
+void debug(){
+    printf("debug\n");
 }
 
 void process_line(char *line){
     if(isalpha(line[0])){
-        if( conversion_table){
-            int i = 0;
-            while( conversion_table[i]){
-                free( conversion_table[i]);
-                i++;
-            }
-            free(conversion_table);
-            conversion_table = NULL;
-        }
+        clean_conversion_table();
         CONVERTING = true;
         return;
     }
@@ -144,7 +155,7 @@ void process_line(char *line){
         CONVERTING = false;
         return;
     } else {
-        manage_conversion_table(line);
+        fill_conversion_table(line);
     }
 }
 
@@ -172,7 +183,7 @@ int main (void)
     size_t size = 0;
     char *line;
     
-    f = fopen("../../input/04/test.txt", "r");
+    f = fopen("../../input/04/input.txt", "r");
     if (f == NULL)
         exit(1);
     size = file_size(f);
