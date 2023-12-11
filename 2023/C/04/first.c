@@ -8,25 +8,41 @@ struct info{
     size_t range;
 };
 
+
 size_t *seeds = NULL;
 struct info **conversion_table = NULL;
 bool CONVERTING = false;
 
+void print(){
+    int i = 0;
+    while(conversion_table && conversion_table[i]){
+        i++;
+    }
+}
+
+void debug(){
+    printf("debug\n");
+}
+
+
 size_t *add_value_to_nmbrs(size_t *n, size_t value){
     int size = 0;
     int i = 0;
-
+    printf("valeu = %li\n",value);
+    if(value == 135215567)
+        printf("%li\n",n[1]);
     if(n == NULL){
-        size = 2;    
+        ;    
     } else {
-        while(n[i] != -1)
+        while(n[i]!= -1){
             i++;
-        size = i + 1;
+        }
     }
+    size = i + 2;
     size_t *new = malloc( sizeof(size_t) * size);
     if(!new)
         exit (1);
-    new[i] = -1;
+    new[i + 1] = -1;
     i = 0;
     while(n && n[i] != -1){
         new[i] = n[i];
@@ -79,6 +95,7 @@ void fill_conversion_table(char* line){
         nmbrs = add_value_to_nmbrs(nmbrs, value);
         while(isnumber(line[i]))
             i++;
+        i++;
     }
     if(!seeds){
         seeds = nmbrs;
@@ -133,17 +150,6 @@ void clean_conversion_table(){
     }
 }
 
-void print(){
-    int i = 0;
-    while(conversion_table && conversion_table[i]){
-        i++;
-    }
-}
-
-void debug(){
-    printf("debug\n");
-}
-
 void process_line(char *line){
     if(isalpha(line[0])){
         clean_conversion_table();
@@ -159,6 +165,19 @@ void process_line(char *line){
     }
 }
 
+size_t min_sort(){
+    int i = 0;
+    size_t min = seeds[0];
+    while(seeds[i]){
+        if(seeds[i] < min){
+            min = seeds[i];
+            i = 0;
+        }
+        i++;
+    }
+    return min;
+}
+
 void calculate_value(char *buffer)
 {
     int i = 0;
@@ -171,10 +190,7 @@ void calculate_value(char *buffer)
         line = get_line(&buffer[i]);
     }
     i = 0;
-    while(seeds[i]){
-        printf("%i ",seeds[i]);
-        i++;
-    }
+    printf("%li",min_sort());
 }
 
 int main (void)
