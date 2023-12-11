@@ -46,7 +46,7 @@ void update_conversion_table(int *nmbrs){
     if(!new)
         exit(1);
     if(conversion_table){
-        for(i = 0; i < size - 1; i++){
+        for(i = 0; i < size - 2; i++){
             new[i] = malloc(sizeof(struct info ));
             if (!new[i])
                 exit(1);
@@ -63,8 +63,7 @@ void update_conversion_table(int *nmbrs){
     new[i]->destination_start = nmbrs[0];
     new[i]->source_start = nmbrs[1];
     new[i]->range = nmbrs[3];
-    i++;
-    new[i] = NULL;
+    new[i + 1] = NULL;
     conversion_table = new;
 }
 
@@ -95,6 +94,7 @@ size_t convert(int seed){
     size_t new_value = 0;
     bool check = false;
     while(conversion_table[i]){
+        printf(" %li, %li, %li \n",conversion_table[i]->destination_start, conversion_table[i]->source_start,conversion_table[i]->range);
         upper_bound = conversion_table[i]->source_start + conversion_table[i]->range;
         if(conversion_table[i]->source_start <= seed && seed < upper_bound){
             check = true;
@@ -103,8 +103,8 @@ size_t convert(int seed){
         i++;
     }
     if(check == true){
-        seed = seed - conversion_table[i]->source_start;
-        new_value = conversion_table[i]->destination_start + seed;
+        int diff = seed - conversion_table[i]->source_start;
+        new_value = conversion_table[i]->destination_start + diff;
     }
     else 
         new_value = seed;
@@ -113,28 +113,37 @@ size_t convert(int seed){
 
 void perform_conversion(){
     size_t i = 0 ;
-
+    printf("CONVERT : ");
     if(conversion_table){
-        while(seeds[i]){
+        while(seeds[i] > 0){
+            printf("before %i | ", seeds[i]);
             seeds[i] = convert(seeds[i]);
+            printf(" after %i ", seeds[i]);
             i++;
         }
     }
+    printf(" end \n");
 }
 
 void process_line(char *line){
     if(isalpha(line[0])){
-        printf("got a new instruction;\n");
+        if( conversion_table){
+            int i = 0;
+            while( conversion_table[i]){
+                free( conversion_table[i]);
+                i++;
+            }
+            free(conversion_table);
+            conversion_table = NULL;
+        }
         CONVERTING = true;
         return;
     }
     else if(line[0] == '\n' || line[0] == '\0'){
-        printf("perform conversion;\n");
         perform_conversion();
         CONVERTING = false;
         return;
     } else {
-        printf("create conversion_table: %s\n",line);
         manage_conversion_table(line);
     }
 }
@@ -152,7 +161,7 @@ void calculate_value(char *buffer)
     }
     i = 0;
     while(seeds[i]){
-        printf("%i",seeds[i]);
+        printf("%i ",seeds[i]);
         i++;
     }
 }
