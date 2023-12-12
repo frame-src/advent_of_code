@@ -1,0 +1,10 @@
+Time:        59     70     78     78
+Distance:   430   1218   1213   1276
+
+Boat speed increase of 1m/1s per second used holding the botton;
+59 seconds
+430 mt
+
+430/59 = 7.28 m/s
+v = s/t;  v * t = s;
+(v + i ) * (t - i) > s; ---> this is the condition
