@@ -14,10 +14,10 @@ int main ( void ) {
             s = i * (time[j] - i);
             if( s > distance[j]){
                 counter++;
-                // inf = true; 
+                inf = true; 
             }
-            // if ( s <= distance[j] && inf == true)
-            //     break;
+            if ( s <= distance[j] && inf == true)
+                break;
             i++;
         }
         printf("Counter: %d\n", counter);
