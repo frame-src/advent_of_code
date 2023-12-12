@@ -1,7 +1,7 @@
 #include "../inc/utils.h"
 
 int main ( void ) {
-    int time[7] = {7,15,30,59,79,78,78};
+    int time[7] = {7,15,30,59,70,78,78};
     int distance[7] = {9,40,200,430, 1218, 1213, 1276};
 
     int counter = 0;
