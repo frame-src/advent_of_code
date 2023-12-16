@@ -2,9 +2,7 @@
 
 int main ( void ) {
     int time = 59707878;
-    // long int time = 71530;
     size_t distance = 430121812131276;
-    // long int distance = 940200;
 
     size_t counter = 0;
     long int i = 0;
