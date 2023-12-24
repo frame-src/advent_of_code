@@ -2,7 +2,7 @@
 
 FILE *f;
 size_t size = 0;
-int map[212122][2];
+int map[404040][2];
 char *instruction;
 
 void count_step()
@@ -19,7 +19,7 @@ void count_step()
         i++;
         count ++;
         if(!instruction[i])
-            i == 0;
+            i = 0;
     }
     printf("%d", count);
 }
@@ -41,14 +41,18 @@ void init_instruction(char *line)
 int convert_to_index(char *str)
 {
     int index;
+    printf("%s : " ,str);
     index = index + (str[0] - 'A')* 10000;
     index = index + (str[1] - 'A')* 100;
     index = index + (str[2] - 'A');
+    printf("%d\n", index);
     return index;
 }
 
 void process_line(char* line)
 {
+    if(!line)
+        return;
     if(!isupper(line[0]))
         return;
     map[convert_to_index(&line[0])][0] = convert_to_index(&line[7]);
@@ -61,13 +65,15 @@ void calc_solution(char *buffer)
     char *line = NULL;
     
     line = get_line(&buffer[i]);
+    // printf("HELLO1\n %s\n", line);
     init_instruction(line);
     while(line){
         i = i + strlen(line) + 1;
         line = destroy_buffer(line);
         line = get_line(&buffer[i]);
-        process_line(&line[i]);
+        process_line(line);
     }
+    printf("HELLO2\n");
     count_step();
 }
 
@@ -77,7 +83,7 @@ int main (void)
     size_t size = 0;
     char *line;
     
-    f = fopen("./Users/francesco/Documents/advent_of_code/2023/input/00/input.txt", "r");
+    f = fopen("/Users/francesco/Documents/advent_of_code/2023/input/07/input.txt", "r");
     if (f == NULL)
         exit(1);
     size = file_size(f);
