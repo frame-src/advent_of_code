@@ -13,15 +13,15 @@ void count_step()
         if(instruction[i] == 'L')
             next = map[next][0];
         else if ( instruction[i] == 'R')
-            next = map[next][0];
-        if(next == 212121)
+            next = map[next][1];
+        if(next == 252525)
             break;
         i++;
-        count ++;
+        count++;
         if(!instruction[i])
             i = 0;
     }
-    printf("%d", count);
+    printf("COUNT: %d", count + 1);
 }
 
 void init_instruction(char *line)
@@ -40,12 +40,10 @@ void init_instruction(char *line)
 
 int convert_to_index(char *str)
 {
-    int index;
-    printf("%s : " ,str);
+    int index = 0;
     index = index + (str[0] - 'A')* 10000;
     index = index + (str[1] - 'A')* 100;
     index = index + (str[2] - 'A');
-    printf("%d\n", index);
     return index;
 }
 
@@ -56,7 +54,7 @@ void process_line(char* line)
     if(!isupper(line[0]))
         return;
     map[convert_to_index(&line[0])][0] = convert_to_index(&line[7]);
-    map[convert_to_index(&line[0])][0] = convert_to_index(&line[12]);
+    map[convert_to_index(&line[0])][1] = convert_to_index(&line[12]);
 }
 
 void calc_solution(char *buffer)
@@ -65,7 +63,6 @@ void calc_solution(char *buffer)
     char *line = NULL;
     
     line = get_line(&buffer[i]);
-    // printf("HELLO1\n %s\n", line);
     init_instruction(line);
     while(line){
         i = i + strlen(line) + 1;
@@ -73,7 +70,6 @@ void calc_solution(char *buffer)
         line = get_line(&buffer[i]);
         process_line(line);
     }
-    printf("HELLO2\n");
     count_step();
 }
 
@@ -83,7 +79,7 @@ int main (void)
     size_t size = 0;
     char *line;
     
-    f = fopen("/Users/francesco/Documents/advent_of_code/2023/input/07/input.txt", "r");
+    f = fopen("/Users/francesco/Documents/advent_of_code/2023/input/07/test.txt", "r");
     if (f == NULL)
         exit(1);
     size = file_size(f);
