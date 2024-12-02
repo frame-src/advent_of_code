@@ -32,18 +32,31 @@ func splitContent(input: String) -> ([Int], [Int]) {
     return (left,right)
 }
 
+
+func calcDistance( left: [Int] , right: [Int]) -> Int {
+    var i: Int = 0
+    let max : Int = left.count
+    var result : Int = 0
+
+    while i < max {
+        result = result + abs(left[i] - right[i])
+        i += 1
+    }
+    return result
+}
+
 func main() {
     let fileName = "input"
-
     let fileManager = FileManager.default
     let currentDirectoryPath = fileManager.currentDirectoryPath
     var content : String = ""
     content = readFileContent(from: fileName, at: currentDirectoryPath)
 
-    let (left, right) = splitContent( input:content )
-    print (left)
-    print (right)
-
+    var (left, right) = splitContent( input:content )
+    left = left.sorted()
+    right = right.sorted()
+    let result = calcDistance( left:left, right:right )
+    print(result)
 }
 
 main()
