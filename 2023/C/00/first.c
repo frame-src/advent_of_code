@@ -1,4 +1,4 @@
-#include "../../inc/utils.h"
+#include "../inc/utils.h"
 
 FILE *f;
 size_t size = 0;

@@ -3,21 +3,53 @@
 FILE *f;
 size_t size = 0;
 
+int *process_line(char *str){
+    int i = 0;
+    int k = 0;
+    int *value =malloc( sizeof(int) * 6);
+    if( value == NULL)
+        exit(1);
+    while(str[i]){
+        // while(!isnumber(str[i]))
+        //     i++;
+        value[k] = atoi(&str[i]);
+        k++;
+        while(isnumber(str[i]))
+            i++;
+        i++;
+    }
+    return value;
+}
+
+int calculate_value(int *vls, int max){
+    int i = 0;
+    int *new =malloc( sizeof(int) * max);
+    if (!new)
+        exit(1);
+    while(i < max){
+        new[i] = vls[i+1] - vls[i];
+    }
+    
+    return (vls[max + new[i]])
+}
 
 void calc_solution(char *buffer)
 {
     size_t i = 0;
     char *line = NULL;
-    
+    int ret_value = 0;
     line = get_line(&buffer[i]);
-    init_instruction(line);
+    int *value = process_line(line);
+    ret_value = ret_value + calculate_value(value);
     while(line){
         i = i + strlen(line) + 1;
         line = destroy_buffer(line);
         line = get_line(&buffer[i]);
-        process_line(line);
+        free(value);
+        value = process_line(line);
+        ret_value = ret_value + calculate_value(value);
     }
-    count_step();
+    printf("%d\n", ret_value);
 }
 
 int main (void)
