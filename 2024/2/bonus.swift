@@ -29,16 +29,12 @@ func checkSafety( array: [Int]) -> Bool {
     
     while i < (array.count - 1){
         if descendingOrder {
-            print(descendingOrder)
             let value = array[i] - array[i + 1]
-            print(value)
             if value <= 0 || value > 3 {
                 return false
             }
         } else {
             let value = array[i] - array[i + 1]
-            print(descendingOrder)
-            print(value)
             if value < -3 || value >= 0 {
                 return false
             }
@@ -50,26 +46,28 @@ func checkSafety( array: [Int]) -> Bool {
 
 func processLine(lines: [String]) -> Int {
     var counter : Int = 0
-    var check : Bool = false
     var tmp_numbers: [Int] = []
     var i: Int = 0
 
     for line in lines {
         let numbers = line.split(separator: " ").compactMap { Int($0) }
-        check = checkSafety(array : numbers)
-        if check == true {
+        i = 0
+        if checkSafety(array: numbers){
             counter = counter + 1
-        } else {
-            while i < numbers.count {
-                tmp_numbers = numbers
-                tmp_numbers.remove(at:i)
-                check = checkSafety(array: tmp_numbers)
-                if check == true{
-                    counter = counter + 1
-                    break
-                }
-                i = i + 1
+            continue
+        }
+        tmp_numbers = numbers
+        tmp_numbers.remove(at:i)
+        while !checkSafety(array: tmp_numbers) {
+            i = i + 1
+            if i == numbers.count{
+                break
             }
+            tmp_numbers = numbers
+            tmp_numbers.remove(at:i)
+        }
+        if i != numbers.count {
+            counter = counter + 1
         }
     }
     return counter
